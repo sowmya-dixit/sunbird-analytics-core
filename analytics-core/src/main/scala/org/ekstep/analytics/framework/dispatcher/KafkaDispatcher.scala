@@ -44,7 +44,6 @@ object KafkaDispatcher extends IDispatcher {
         val brokerList = config.getOrElse("brokerList", null).asInstanceOf[String]
         val topic = config.getOrElse("topic", null).asInstanceOf[String]
         val batchSize = config.getOrElse("batchSize", 100).asInstanceOf[Integer];
-        val partition = config.getOrElse("partition", 100).asInstanceOf[Integer];
         val lingerMs = config.getOrElse("lingerMs", 10).asInstanceOf[Integer];
         if (null == brokerList) {
             throw new DispatcherException("brokerList parameter is required to send output to kafka")
@@ -53,7 +52,7 @@ object KafkaDispatcher extends IDispatcher {
             throw new DispatcherException("topic parameter is required to send output to kafka")
         }
 
-        events.repartition(partition).foreachPartition((partitions: Iterator[String]) => {
+        events.foreachPartition((partitions: Iterator[String]) => {
 //            JobLogger.log("partition data count: " + partitions.length, None, INFO);
             val kafkaSink = KafkaSink(_getKafkaProducerConfig(brokerList, batchSize, lingerMs));
             partitions.foreach { message =>
@@ -89,7 +88,7 @@ object KafkaDispatcher extends IDispatcher {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerList)
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
-//        props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy")
+        props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy")
         props.put(ProducerConfig.LINGER_MS_CONFIG, lingerMs)
         props
     }
