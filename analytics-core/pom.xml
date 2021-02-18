@@ -2,13 +2,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.sunbird</groupId>
 	<artifactId>analytics-core</artifactId>
+	<version>2.0</version>
 	<name>analytics-core</name>
 
 	<parent>
 		<groupId>org.sunbird</groupId>
-		<artifactId>sunbird-analytics-core</artifactId>
-		<version>2.1</version>
+		<artifactId>sunbird-analytics-framework</artifactId>
+		<version>2.0.0</version>
 	</parent>
 
 	<properties>
@@ -365,6 +367,12 @@
 								<arg>${project.build.directory}/.scala_dependencies</arg>
 							</args>
 						</configuration>
+					</execution>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>doc-jar</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
